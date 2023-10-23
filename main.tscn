@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://cya4cjjx7j0wq"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_8ngi4"]
+[ext_resource type="Texture2D" uid="uid://ckb4fy7psfm51" path="res://assets/figure_in_manga_style_cc.png" id="2_1k3bd"]
+
+[node name="VBoxContainer" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_8ngi4")
+
+[node name="OpenDialogButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Open File
+"
+
+[node name="PageViewer" type="TextureRect" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_1k3bd")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="FirstDialog" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 400)
+min_size = Vector2i(600, 400)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.cbz", "*.zip")
+
+[connection signal="pressed" from="OpenDialogButton" to="." method="_on_button_pressed"]
+[connection signal="file_selected" from="FirstDialog" to="." method="_on_first_dialog_file_selected"]
