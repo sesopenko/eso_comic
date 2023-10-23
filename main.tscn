@@ -13,11 +13,22 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_8ngi4")
 
-[node name="OpenDialogButton" type="Button" parent="."]
+[node name="Controls" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="OpenDialogButton" type="Button" parent="Controls"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "Open File
 "
+
+[node name="PrevPage" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Previous Page"
+
+[node name="NextPage" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Next Page"
 
 [node name="PageViewer" type="TextureRect" parent="."]
 layout_mode = 2
@@ -37,5 +48,7 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.cbz", "*.zip")
 
-[connection signal="pressed" from="OpenDialogButton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Controls/OpenDialogButton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Controls/PrevPage" to="." method="_on_prev_page_pressed"]
+[connection signal="pressed" from="Controls/NextPage" to="." method="_on_next_page_pressed"]
 [connection signal="file_selected" from="FirstDialog" to="." method="_on_first_dialog_file_selected"]

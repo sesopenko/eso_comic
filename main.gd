@@ -67,3 +67,27 @@ func _delete_children(node: Node)->void:
 	for n in node.get_children():
 		node.remove_child(n)
 		n.queue_free()
+
+
+func _on_prev_page_pressed():
+	if _zip_reader == null:
+		return
+	if _current_page_index == 0:
+		# can't go any further
+		return
+	_current_page_index -= 1
+	_display_page()
+
+
+func _on_next_page_pressed():
+	if _zip_reader == null:
+		return
+	if _files.size() == 0:
+		# can't go anywhere
+		return
+	if _current_page_index >= _files.size() - 1:
+		# can't go any further
+		return
+	_current_page_index += 1
+	_display_page()
+	
