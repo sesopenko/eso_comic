@@ -1,4 +1,4 @@
-# eso_comic
+# eso comic
 
 A godot project for reading comic books. The aim is to have a side by side reader with japanese on one side and english on the other, but we'll see if we get that far.
 
