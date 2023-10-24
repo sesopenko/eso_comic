@@ -21,6 +21,9 @@ func _process(delta):
 
 
 func _on_open_dialog_button_pressed():
+	var path: String = get_node("/root/Config").call("get_folder_of_last_file_open")
+	if path != "":
+		_first_dialog.current_dir = path
 	_first_dialog.visible = true
 	
 	
@@ -29,6 +32,7 @@ func _on_open_dir_button_pressed():
 
 
 func _on_first_dialog_file_selected(path):
+	get_node("/root/Config").call("set_last_file_open_path", path)
 	_zip_reader = ZIPReader.new()
 	_dir_access = null
 	var err := _zip_reader.open(path)
@@ -42,6 +46,7 @@ func _on_first_dialog_file_selected(path):
 		_display_page()
 
 func _on_dir_dialog_dir_selected(dir):
+	get_node("/root/Config").call("set_last_dir_open_path", dir)
 	_dir_access = DirAccess.open(dir)
 	if not _dir_access:
 		push_error("Failed to open directory:", dir)
@@ -77,27 +82,15 @@ func _display_page()->void:
 	# write to file so we can load it
 	# this step may be unecessary but haven't tried refactoring into loading
 	# image directly from bytes.
-	var temp_file_name = ""
+	var image: Image = Image.new()
 	if file_name.ends_with(".jpg") or file_name.ends_with(".jpeg"):
-		temp_file_name = "user://tmp_current_page.jpg"
+		image.load_jpg_from_buffer(res)
 	elif file_name.ends_with(".png"):
-		temp_file_name = "user://tmp_current_page.png"
+		image.load_png_from_buffer(res)
 	else:
-		push_error("Unsupported file:", file_name)
+		push_error("Unsupported file extension:", file_name)
 		get_tree().quit()
 		
-	var file = FileAccess.open(temp_file_name, FileAccess.WRITE)
-	file.store_buffer(res)
-	file.close()
-	var image: Image = Image.load_from_file(temp_file_name)
-#	var panel_size:Vector2 = _panel_container.size
-	if image.get_height() > image.get_width():
-		# height will be long edge
-		pass
-	else:
-		# width will be long edge
-		pass
-	# scale with Image.resize()
 	var image_texture: ImageTexture = ImageTexture.create_from_image(image)
 	var size:Vector2 = image_texture.get_size()
 	_page_viewer.texture = image_texture
