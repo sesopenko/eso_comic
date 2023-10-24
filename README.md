@@ -1,8 +1,14 @@
 # eso comic
 
-A godot project for reading comic books. The aim is to have a side by side reader with japanese on one side and english on the other, but we'll see if we get that far.
+An open source comic book reader built with Godot. The aim is to have a side by side reader with japanese on one side and english on the other, but we'll see if we get that far.
 
 ![Screenshot](assets/screenshot_1.jpg)
+
+## Supported Files
+
+* CBZ files containing jpg/png files
+* ZIP files containing jpg/png files
+* Directories containing jpg/png files (nested directories currently unsupported)
 
 ## License
 
