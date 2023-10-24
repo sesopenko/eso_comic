@@ -16,11 +16,15 @@ script = ExtResource("1_8ngi4")
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="OpenDialogButton" type="Button" parent="Controls"]
+[node name="OpenFileButton" type="Button" parent="Controls"]
 layout_mode = 2
 size_flags_vertical = 0
-text = "Open File
+text = "Open CBZ/ZIP File
 "
+
+[node name="OpenDirButton" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Open Folder"
 
 [node name="PrevPage" type="Button" parent="Controls"]
 layout_mode = 2
@@ -48,7 +52,16 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.cbz", "*.zip")
 
-[connection signal="pressed" from="Controls/OpenDialogButton" to="." method="_on_button_pressed"]
+[node name="DirDialog" type="FileDialog" parent="."]
+title = "Open a Directory"
+size = Vector2i(600, 400)
+ok_button_text = "Select Current Folder"
+file_mode = 2
+access = 2
+
+[connection signal="pressed" from="Controls/OpenFileButton" to="." method="_on_open_dialog_button_pressed"]
+[connection signal="pressed" from="Controls/OpenDirButton" to="." method="_on_open_dir_button_pressed"]
 [connection signal="pressed" from="Controls/PrevPage" to="." method="_on_prev_page_pressed"]
 [connection signal="pressed" from="Controls/NextPage" to="." method="_on_next_page_pressed"]
 [connection signal="file_selected" from="FirstDialog" to="." method="_on_first_dialog_file_selected"]
+[connection signal="dir_selected" from="DirDialog" to="." method="_on_dir_dialog_dir_selected"]
