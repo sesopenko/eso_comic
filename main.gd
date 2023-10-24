@@ -1,7 +1,5 @@
 extends VBoxContainer
 
-var _reader_panel: PackedScene = preload("res://scenes/ReaderPanel.tscn")
-
 @onready var _first_dialog: FileDialog = $FirstDialog
 @onready var _dir_dialog: FileDialog = $DirDialog
 @onready var _page_viewer: TextureRect = $PageViewer
