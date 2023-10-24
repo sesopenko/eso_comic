@@ -28,6 +28,9 @@ func _on_open_dialog_button_pressed():
 	
 	
 func _on_open_dir_button_pressed():
+	var path: String = get_node("/root/Config").call("get_last_dir_open_path")
+	if path != "":
+		_dir_dialog.current_dir = path
 	_dir_dialog.visible = true
 
 
@@ -123,5 +126,3 @@ func _on_next_page_pressed():
 	_current_page_index += 1
 	_display_page()
 	
-
-

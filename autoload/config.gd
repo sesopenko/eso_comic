@@ -46,3 +46,10 @@ func get_folder_of_last_file_open()->String:
 func set_last_dir_open_path(path: String)->void:
 	config[LAST_DIR_KEY] = path
 	_save()
+	
+func get_last_dir_open_path()->String:
+	if config[LAST_DIR_KEY] == "":
+		return ""
+	if not DirAccess.dir_exists_absolute(config[LAST_DIR_KEY]):
+		return ""
+	return config[LAST_DIR_KEY]
