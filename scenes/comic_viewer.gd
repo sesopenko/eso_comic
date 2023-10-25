@@ -192,11 +192,11 @@ func _on_dir_dialog_dir_selected(dir):
 
 func _on_next_comic_button_pressed()->void:
 	if _zip_reader:
-		_open_next_zip_file()
+		_move_zip_file(1)
 	else:
-		_open_next_dir()
+		_move_dir(1)
 
-func _open_next_zip_file()->void:
+func _move_zip_file(steps: int)->void:
 # we are in zip mode, so get the parent directory and get the next file.
 	var regex = RegEx.new()
 	regex.compile("/(?<filename>[^/]*)$")
@@ -219,14 +219,14 @@ func _open_next_zip_file()->void:
 		file_name = parent_dir.get_next()
 	files.sort()
 	var found_index: int = files.find(current_file_name)
-	var next_file_index = found_index + 1
-	if files.size() > next_file_index:
+	var next_file_index = found_index + steps
+	if files.size() > next_file_index and next_file_index >= 0:
 		var next_file: String = files[next_file_index]
 		var next_path = str(dir, "/", next_file)
 		_opening_next = true
 		_on_file_dialog_file_selected(next_path)
 
-func _open_next_dir()->void:
+func _move_dir(steps: int)->void:
 	var regex = RegEx.new()
 	regex.compile("/(?<dirname>[^/]*)$")
 	var re_result: RegExMatch = regex.search(_file_path)
@@ -246,10 +246,17 @@ func _open_next_dir()->void:
 		dir_name = parent_dir.get_next()
 	dirs.sort()
 	var found_index: int = dirs.find(current_dir_name)
-	var next_dir_index = found_index + 1
-	if dirs.size() > next_dir_index:
+	var next_dir_index = found_index + steps
+	if dirs.size() > next_dir_index and next_dir_index >= 0:
 		var next_dir: String = dirs[next_dir_index]
 		var next_path = str(parent_path, "/", next_dir)
 		_opening_next = true
 		_on_dir_dialog_dir_selected(next_path)
 		
+
+
+func _on_prev_comic_button_pressed():
+	if _zip_reader:
+		_move_zip_file(-1)
+	else:
+		_move_dir(-1)
