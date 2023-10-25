@@ -71,5 +71,5 @@ access = 2
 [connection signal="pressed" from="Controls/OpenDirButton" to="." method="_on_open_dir_button_pressed"]
 [connection signal="pressed" from="Controls/PrevPage" to="." method="_on_prev_page_pressed"]
 [connection signal="pressed" from="Controls/NextPage" to="." method="_on_next_page_pressed"]
-[connection signal="file_selected" from="FileDialog" to="." method="_on_first_dialog_file_selected"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="dir_selected" from="DirDialog" to="." method="_on_dir_dialog_dir_selected"]

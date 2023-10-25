@@ -8,6 +8,7 @@ class_name ComicViewer
 
 signal page_next()
 signal page_prev()
+signal opened(is_file, path)
 
 var _zip_reader: ZIPReader
 var _files: PackedStringArray = PackedStringArray()
@@ -46,7 +47,9 @@ func _on_open_dir_button_pressed():
 	_dir_dialog.visible = true
 
 
-func _on_first_dialog_file_selected(path):
+func open_zip_file_path(path):
+	if not FileAccess.file_exists(path):
+		return
 	_file_path = path
 	get_node("/root/Config").call("set_last_file_open_path", path)
 	_zip_reader = ZIPReader.new()
@@ -61,7 +64,9 @@ func _on_first_dialog_file_selected(path):
 	if _files.size() > 0:
 		_display_page()
 
-func _on_dir_dialog_dir_selected(dir):
+func open_dir_path(dir):
+	if not DirAccess.dir_exists_absolute(dir):
+		return
 	_file_path = dir
 	get_node("/root/Config").call("set_last_dir_open_path", dir)
 	_dir_access = DirAccess.open(dir)
@@ -161,3 +166,13 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	_mouse_active = false
+
+
+func _on_file_dialog_file_selected(path):
+	open_zip_file_path(path)
+	emit_signal("opened", true, path)
+
+
+func _on_dir_dialog_dir_selected(dir):
+	open_dir_path(dir)
+	emit_signal("opened", false, dir)

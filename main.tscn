@@ -24,6 +24,17 @@ text = "Add Reader"
 layout_mode = 2
 text = "Synchronize"
 
+[node name="SettingsBox" type="HBoxContainer" parent="MainControl"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainControl/SettingsBox"]
+layout_mode = 2
+text = "Settings:"
+
+[node name="ResumeCheckbox" type="CheckBox" parent="MainControl/SettingsBox"]
+layout_mode = 2
+text = "Resume on Open"
+
 [node name="ViewerHolder" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
@@ -32,5 +43,7 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [connection signal="pressed" from="MainControl/AddReaderButton" to="." method="_on_add_reader_button_pressed"]
+[connection signal="toggled" from="MainControl/SettingsBox/ResumeCheckbox" to="." method="_on_resume_checkbox_toggled"]
+[connection signal="opened" from="ViewerHolder/ComicViewer" to="." method="_on_comic_viewer_opened" binds= [true]]
 [connection signal="page_next" from="ViewerHolder/ComicViewer" to="." method="_on_comic_viewer_page_next" binds= [true]]
 [connection signal="page_prev" from="ViewerHolder/ComicViewer" to="." method="_on_comic_viewer_page_prev" binds= [true]]

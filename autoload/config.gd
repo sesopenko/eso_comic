@@ -5,16 +5,32 @@ const CONFIG_VERSION_KEY = "config_version"
 const LAST_FILE_KEY = "last_file"
 const LAST_DIR_KEY = "last_dir"
 const POSITION_KEY = "position_file"
-const CURRENT_VERSION = 2
+const RESUME_KEY = "resume_on_open"
+const CURRENT_VERSION = 4
 
-var config: Dictionary = {
-	CONFIG_VERSION_KEY: 2,
+var config_default: Dictionary = {
+	CONFIG_VERSION_KEY: 4,
 	LAST_FILE_KEY: "",
 	LAST_DIR_KEY: "",
 	POSITION_KEY: {},
+	RESUME_KEY: false,
+	"reader_state": {
+		"left": {
+			"is_file": false,
+			"path": "",
+		},
+		"right": {
+			"visible": false,
+			"is_file": false,
+			"path": "",
+		}
+	}
 }
 
+var config: Dictionary = {}
+
 func _ready():
+	config = config_default
 	_initialize()
 
 func _initialize()->void:
@@ -32,6 +48,15 @@ func _migrate()->void:
 		while config[CONFIG_VERSION_KEY] < CURRENT_VERSION:
 			if config[CONFIG_VERSION_KEY] == 1:
 				config[POSITION_KEY] = {}
+			elif config[CONFIG_VERSION_KEY] == 2:
+				config[RESUME_KEY] = false
+			elif config[CONFIG_VERSION_KEY] == 3:
+				config["reader_state"] = config_default["reader_state"]
+			else:
+				# this is an unhandled config upgrade which is a bad thing
+				# let's fail gracefully for now.
+				push_error("Unhandled configuration upgrade")
+				config = config_default
 			config[CONFIG_VERSION_KEY] += 1
 		_save()
 				
@@ -75,4 +100,21 @@ func get_read_position(path)->int:
 	if not (config[POSITION_KEY] as Dictionary).has(path):
 		return 0
 	return int(config[POSITION_KEY][path])
+	
+func set_resume(enabled: bool)->void:
+	config[RESUME_KEY] = enabled
+	_save()
 
+func get_resume()->bool:
+	return config[RESUME_KEY] as bool
+	
+func get_reader_state()->Dictionary:
+	return config["reader_state"]
+	
+func set_reader_state(is_left: bool, is_file: bool, path: String)->void:
+	if is_left:
+		config["reader_state"]["left"] = {
+			"is_file": is_file,
+			"path": path,
+		}
+	_save()
