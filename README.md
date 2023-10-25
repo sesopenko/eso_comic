@@ -1,14 +1,18 @@
 # eso comic
 
-An open source comic book reader built with Godot. The aim is to have a side by side reader with japanese on one side and english on the other, but we'll see if we get that far.
+An innovative open-source comic book reader powered by [Godot](https://godotengine.org/), designed to offer a dual-language comic reading experience. Open two comics, each in a different language, and have their pages synchronized for dual reading language. Scroll through both comics simultaneously, as you immerse yourself in the captivating world of visual storytelling, seamlessly bridging English and Japanese, and other languages.
 
 ![Screenshot](assets/screenshot_1.jpg)
 
+## Motivation
+
+While learning a second language, I've desired to capture some of the nuances lost in translation when reading comics. Opening two reader applications works, but paging them independently was a pain. I wanted something that lets me page through them simultaneously.
+
 ## Supported Files
 
-* CBZ files containing jpg/png files
+* [CBZ](https://en.wikipedia.org/wiki/Comic_book_archive) files containing jpg/png files
 * ZIP files containing jpg/png files
-* Directories containing jpg/png files (nested directories currently unsupported)
+* Directories containing jpg/png files (nested directories unsupported)
 
 ## License
 
