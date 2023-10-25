@@ -4,12 +4,13 @@ class_name ComicViewer
 @onready var _first_dialog: FileDialog = $FileDialog
 @onready var _dir_dialog: FileDialog = $DirDialog
 @onready var _page_viewer: TextureRect = $PageViewer
+@onready var _read_position_label: Label = $Controls/ReadPosLabel
 
 signal page_next()
 signal page_prev()
 
 var _zip_reader: ZIPReader
-var _files: PackedStringArray
+var _files: PackedStringArray = PackedStringArray()
 var _current_page_index: int = 0
 var _dir_access: DirAccess
 var _file_path: String = ""
@@ -111,6 +112,7 @@ func _display_page()->void:
 	var size:Vector2 = image_texture.get_size()
 	_page_viewer.texture = image_texture
 	get_node("/root/Config").set_read_position(_file_path, _current_page_index)
+	update_read_pos()
 	
 func _delete_children(node: Node)->void:
 	for n in node.get_children():
@@ -137,6 +139,12 @@ func change_prev()->void:
 		return
 	_current_page_index -= 1
 	_display_page()
+	
+func update_read_pos()->void:
+	var current_page: int = _current_page_index + 1
+	var num_pages: int = _files.size()
+	var read_pos = str(current_page, "/", num_pages)
+	_read_position_label.text = read_pos
 
 func _on_prev_page_pressed():
 	change_prev()
@@ -146,8 +154,6 @@ func _on_prev_page_pressed():
 func _on_next_page_pressed():
 	change_next()
 	emit_signal("page_next")
-	
-
 
 func _on_mouse_entered():
 	_mouse_active = true

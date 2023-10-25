@@ -27,6 +27,9 @@ text = "Open CBZ/ZIP File
 layout_mode = 2
 text = "Open Folder"
 
+[node name="ReadPosLabel" type="Label" parent="Controls"]
+layout_mode = 2
+
 [node name="PrevPage" type="Button" parent="Controls"]
 layout_mode = 2
 text = "Previous Page"
