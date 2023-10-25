@@ -6,14 +6,16 @@ const LAST_FILE_KEY = "last_file"
 const LAST_DIR_KEY = "last_dir"
 const POSITION_KEY = "position_file"
 const RESUME_KEY = "resume_on_open"
-const CURRENT_VERSION = 4
+const SYNC_KEY = "sync"
+const CURRENT_VERSION = 5
 
 var config_default: Dictionary = {
-	CONFIG_VERSION_KEY: 4,
+	CONFIG_VERSION_KEY: 5,
 	LAST_FILE_KEY: "",
 	LAST_DIR_KEY: "",
 	POSITION_KEY: {},
 	RESUME_KEY: false,
+	SYNC_KEY: false,
 	"reader_state": {
 		"left": {
 			"is_file": false,
@@ -23,8 +25,8 @@ var config_default: Dictionary = {
 			"visible": false,
 			"is_file": false,
 			"path": "",
-		}
-	}
+		},
+	},
 }
 
 var config: Dictionary = {}
@@ -52,11 +54,15 @@ func _migrate()->void:
 				config[RESUME_KEY] = false
 			elif config[CONFIG_VERSION_KEY] == 3:
 				config["reader_state"] = config_default["reader_state"]
+			elif config[CONFIG_VERSION_KEY] == 4:
+				config[SYNC_KEY] = config_default[SYNC_KEY]
 			else:
 				# this is an unhandled config upgrade which is a bad thing
 				# let's fail gracefully for now.
 				push_error("Unhandled configuration upgrade")
 				config = config_default
+				_save()
+				return
 			config[CONFIG_VERSION_KEY] += 1
 		_save()
 
@@ -131,3 +137,10 @@ func is_right_visible()->bool:
 func set_right_visible(visible: bool)->void:
 	config["reader_state"]["right"]["visible"] = visible
 	_save()
+	
+func set_synchronize(enabled: bool)->void:
+	config[SYNC_KEY] = enabled
+	_save()
+
+func get_synchronize()->bool:
+	return config[SYNC_KEY] as bool

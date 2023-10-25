@@ -15,6 +15,8 @@ func _ready():
 	if _resume_checkbox.button_pressed:
 		_perform_resume()
 	_add_reader_button.button_pressed = get_node("/root/Config").is_right_visible()
+	_synchronize_setting.button_pressed = get_node("/root/Config").get_synchronize()
+	_synchronize_setting.connect("toggled", _on_synchronize_setting_toggled)
 
 func _perform_resume()->void:
 	var reader_state: Dictionary = get_node("/root/Config").get_reader_state()
@@ -73,3 +75,7 @@ func _on_add_reader_button_toggled(button_pressed):
 	else:
 		_add_reader()
 	get_node("/root/Config").set_right_visible(button_pressed)
+
+
+func _on_synchronize_setting_toggled(button_pressed):
+	get_node("/root/Config").set_synchronize(button_pressed)
