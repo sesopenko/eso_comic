@@ -59,7 +59,7 @@ func _migrate()->void:
 				config = config_default
 			config[CONFIG_VERSION_KEY] += 1
 		_save()
-				
+
 func _save()->void:
 	var file: = FileAccess.open(CONFIG_FILEPATH, FileAccess.WRITE)
 	file.store_string(JSON.stringify(config))

@@ -15,11 +15,6 @@ func _ready():
 	if _resume_checkbox.button_pressed:
 		_perform_resume()
 	_add_reader_button.button_pressed = get_node("/root/Config").is_right_visible()
-	
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 
 func _perform_resume()->void:
 	var reader_state: Dictionary = get_node("/root/Config").get_reader_state()
@@ -55,7 +50,6 @@ func _on_comic_viewer_page_next(is_primary: bool):
 			if _secondary_viewer:
 				_secondary_viewer.change_next()
 
-
 func _on_comic_viewer_page_prev(is_primary: bool):
 	if _synchronize_setting.button_pressed:
 		if not is_primary:
@@ -66,7 +60,6 @@ func _on_comic_viewer_page_prev(is_primary: bool):
 
 func _on_resume_checkbox_toggled(button_pressed: bool):
 	get_node("/root/Config").set_resume(button_pressed)
-
 
 func _on_comic_viewer_opened(is_file, path, is_left):
 	if is_left:
