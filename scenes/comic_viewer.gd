@@ -18,6 +18,8 @@ var _file_path: String = ""
 
 var _mouse_active: bool = false
 
+var _opening_next: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
@@ -60,7 +62,11 @@ func open_zip_file_path(path):
 		get_tree().quit()
 	_files = _zip_reader.get_files()
 	_files.sort()
-	_current_page_index = get_node("/root/Config").get_read_position(_file_path)
+	if _opening_next:
+		_current_page_index = 0
+		_opening_next = false
+	else:
+		_current_page_index = get_node("/root/Config").get_read_position(_file_path)
 	if _files.size() > 0:
 		_display_page()
 
@@ -77,7 +83,11 @@ func open_dir_path(dir):
 		get_tree().quit()
 	_zip_reader = null
 	_files = _build_files_from_directory(_dir_access)
-	_current_page_index = get_node("/root/Config").get_read_position(_file_path)
+	if _opening_next:
+		_current_page_index = 0
+		_opening_next = false
+	else:
+		_current_page_index = get_node("/root/Config").get_read_position(_file_path)
 	if _files.size() > 0:
 		_display_page()
 
@@ -213,6 +223,7 @@ func _open_next_zip_file()->void:
 	if files.size() > next_file_index:
 		var next_file: String = files[next_file_index]
 		var next_path = str(dir, "/", next_file)
+		_opening_next = true
 		_on_file_dialog_file_selected(next_path)
 
 func _open_next_dir()->void:
@@ -239,4 +250,6 @@ func _open_next_dir()->void:
 	if dirs.size() > next_dir_index:
 		var next_dir: String = dirs[next_dir_index]
 		var next_path = str(parent_path, "/", next_dir)
+		_opening_next = true
 		_on_dir_dialog_dir_selected(next_path)
+		
