@@ -67,6 +67,8 @@ func open_zip_file_path(path):
 func open_dir_path(dir):
 	if not DirAccess.dir_exists_absolute(dir):
 		return
+	if dir == "":
+		return
 	_file_path = dir
 	get_node("/root/Config").call("set_last_dir_open_path", dir)
 	_dir_access = DirAccess.open(dir)

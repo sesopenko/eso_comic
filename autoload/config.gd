@@ -117,4 +117,17 @@ func set_reader_state(is_left: bool, is_file: bool, path: String)->void:
 			"is_file": is_file,
 			"path": path,
 		}
+	else:
+		config["reader_state"]["right"] = {
+			"visible": true,
+			"is_file": is_file,
+			"path": path,
+		}
+	_save()
+	
+func is_right_visible()->bool:
+	return config["reader_state"]["right"]["visible"] as bool
+	
+func set_right_visible(visible: bool)->void:
+	config["reader_state"]["right"]["visible"] = visible
 	_save()

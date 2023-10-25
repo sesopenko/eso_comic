@@ -16,9 +16,9 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 
-[node name="AddReaderButton" type="Button" parent="MainControl"]
+[node name="AddReaderButton" type="CheckButton" parent="MainControl"]
 layout_mode = 2
-text = "Add Reader"
+text = "Right Reader"
 
 [node name="SynchronizeSetting" type="CheckBox" parent="MainControl"]
 layout_mode = 2
@@ -35,7 +35,7 @@ size_flags_vertical = 3
 [node name="ComicViewer" parent="ViewerHolder" instance=ExtResource("1_hc3ip")]
 layout_mode = 2
 
-[connection signal="pressed" from="MainControl/AddReaderButton" to="." method="_on_add_reader_button_pressed"]
+[connection signal="toggled" from="MainControl/AddReaderButton" to="." method="_on_add_reader_button_toggled"]
 [connection signal="toggled" from="MainControl/ResumeCheckbox" to="." method="_on_resume_checkbox_toggled"]
 [connection signal="opened" from="ViewerHolder/ComicViewer" to="." method="_on_comic_viewer_opened" binds= [true]]
 [connection signal="page_next" from="ViewerHolder/ComicViewer" to="." method="_on_comic_viewer_page_next" binds= [true]]
