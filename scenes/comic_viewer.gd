@@ -180,34 +180,63 @@ func _on_dir_dialog_dir_selected(dir):
 	emit_signal("opened", false, dir)
 
 
-func _on_next_comic_button_pressed():
+func _on_next_comic_button_pressed()->void:
 	if _zip_reader:
-		# we are in zip mode, so get the parent directory and get the next file.
-		var regex = RegEx.new()
-		regex.compile("/(?<filename>[^/]*)$")
-		var re_result: RegExMatch = regex.search(_file_path)
-		var strings := re_result.strings
-		var current_file_name: String = strings[1] as String
-		var dir = (_file_path as String).substr(0, re_result.get_start())
-		
-		if not DirAccess.dir_exists_absolute(dir):
-			push_error("Cannot determine parent folder (_file_path, dir):", _file_path, dir)
-			return
-		var parent_dir: DirAccess = DirAccess.open(dir)
-		parent_dir.list_dir_begin()
-		var files = PackedStringArray()
-		var file_name: String = parent_dir.get_next()
-		while file_name != "":
-			if not parent_dir.current_is_dir():
-				if file_name.ends_with(".cbz") or file_name.ends_with(".zip"):
-					files.push_back(file_name)
-			file_name = parent_dir.get_next()
-		files.sort()
-		var found_index: int = files.find(current_file_name)
-		var next_file_index = found_index + 1
-		if files.size() > next_file_index:
-			var next_file: String = files[next_file_index]
-			var next_path = str(dir, "/", next_file)
-			_on_file_dialog_file_selected(next_path)
-		
-		pass
+		_open_next_zip_file()
+	else:
+		_open_next_dir()
+
+func _open_next_zip_file()->void:
+# we are in zip mode, so get the parent directory and get the next file.
+	var regex = RegEx.new()
+	regex.compile("/(?<filename>[^/]*)$")
+	var re_result: RegExMatch = regex.search(_file_path)
+	var strings := re_result.strings
+	var current_file_name: String = strings[1] as String
+	var dir = (_file_path as String).substr(0, re_result.get_start())
+	
+	if not DirAccess.dir_exists_absolute(dir):
+		push_error("Cannot determine parent folder (_file_path, dir):", _file_path, dir)
+		return
+	var parent_dir: DirAccess = DirAccess.open(dir)
+	parent_dir.list_dir_begin()
+	var files = PackedStringArray()
+	var file_name: String = parent_dir.get_next()
+	while file_name != "":
+		if not parent_dir.current_is_dir():
+			if file_name.ends_with(".cbz") or file_name.ends_with(".zip"):
+				files.push_back(file_name)
+		file_name = parent_dir.get_next()
+	files.sort()
+	var found_index: int = files.find(current_file_name)
+	var next_file_index = found_index + 1
+	if files.size() > next_file_index:
+		var next_file: String = files[next_file_index]
+		var next_path = str(dir, "/", next_file)
+		_on_file_dialog_file_selected(next_path)
+
+func _open_next_dir()->void:
+	var regex = RegEx.new()
+	regex.compile("/(?<dirname>[^/]*)$")
+	var re_result: RegExMatch = regex.search(_file_path)
+	var current_dir_name: String = re_result.strings[1]
+	var strings := re_result.strings
+	var parent_path = (_file_path as String).substr(0, re_result.get_start())
+	if not DirAccess.dir_exists_absolute(parent_path):
+		push_error("Cannot determine parent folder (_file_path, parent_path)", _file_path, parent_path)
+		return
+	var parent_dir: DirAccess = DirAccess.open(parent_path)
+	parent_dir.list_dir_begin()
+	var dirs:PackedStringArray = PackedStringArray()
+	var dir_name: String = parent_dir.get_next()
+	while dir_name != "":
+		if parent_dir.current_is_dir():
+			dirs.push_back(dir_name)
+		dir_name = parent_dir.get_next()
+	dirs.sort()
+	var found_index: int = dirs.find(current_dir_name)
+	var next_dir_index = found_index + 1
+	if dirs.size() > next_dir_index:
+		var next_dir: String = dirs[next_dir_index]
+		var next_path = str(parent_path, "/", next_dir)
+		_on_dir_dialog_dir_selected(next_path)
