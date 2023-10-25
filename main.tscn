@@ -13,6 +13,7 @@ script = ExtResource("1_7gc0p")
 
 [node name="MainControl" type="HBoxContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 0
 
 [node name="AddReaderButton" type="Button" parent="MainControl"]

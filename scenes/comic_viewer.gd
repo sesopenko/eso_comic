@@ -13,13 +13,21 @@ var _files: PackedStringArray
 var _current_page_index: int = 0
 var _dir_access: DirAccess
 
+var _mouse_active: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	if _mouse_active:
+		if Input.is_action_just_released("page_next"):
+			change_next()
+			emit_signal("page_next")
+		if Input.is_action_just_released("page_prev"):
+			change_prev()
+			emit_signal("page_prev")
 
 
 func _on_open_dialog_button_pressed():
@@ -135,3 +143,11 @@ func _on_next_page_pressed():
 	change_next()
 	emit_signal("page_next")
 	
+
+
+func _on_mouse_entered():
+	_mouse_active = true
+
+
+func _on_mouse_exited():
+	_mouse_active = false

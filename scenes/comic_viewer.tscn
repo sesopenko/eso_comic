@@ -15,6 +15,7 @@ script = ExtResource("1_r0uc1")
 
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="OpenFileButton" type="Button" parent="Controls"]
 layout_mode = 2
@@ -61,6 +62,8 @@ dialog_hide_on_ok = true
 file_mode = 2
 access = 2
 
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Controls/OpenFileButton" to="." method="_on_open_dialog_button_pressed"]
 [connection signal="pressed" from="Controls/OpenDirButton" to="." method="_on_open_dir_button_pressed"]
 [connection signal="pressed" from="Controls/PrevPage" to="." method="_on_prev_page_pressed"]
