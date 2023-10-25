@@ -4,7 +4,7 @@ var _viewer_packed: PackedScene = preload("res://scenes/comic_viewer.tscn")
 @onready var _viewer_holder: Node = $ViewerHolder
 @onready var _synchronize_setting: CheckBox = $MainControl/SynchronizeSetting
 @onready var _add_reader_button: Button = $MainControl/AddReaderButton
-@onready var _resume_checkbox: CheckBox = $MainControl/SettingsBox/ResumeCheckbox
+@onready var _resume_checkbox: CheckBox = $MainControl/ResumeCheckbox
 @onready var _primary_viewer: ComicViewer = $ViewerHolder/ComicViewer
 
 var _secondary_viewer: ComicViewer
