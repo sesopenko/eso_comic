@@ -2,7 +2,7 @@
 
 An innovative open-source comic book reader powered by [Godot](https://godotengine.org/), designed to offer a dual-language comic reading experience. Open two comics, each in a different language, and have their pages synchronized for dual reading language. Scroll through both comics simultaneously, as you immerse yourself in the captivating world of visual storytelling, seamlessly bridging English and Japanese, and other languages.
 
-![Screenshot](assets/screenshot_1.jpg)
+![Screenshot](docs/images/screenshot_1.jpg)
 
 ## Motivation
 
