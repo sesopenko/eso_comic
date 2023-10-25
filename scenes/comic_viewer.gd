@@ -12,6 +12,7 @@ var _zip_reader: ZIPReader
 var _files: PackedStringArray
 var _current_page_index: int = 0
 var _dir_access: DirAccess
+var _file_path: String = ""
 
 var _mouse_active: bool = false
 
@@ -45,6 +46,7 @@ func _on_open_dir_button_pressed():
 
 
 func _on_first_dialog_file_selected(path):
+	_file_path = path
 	get_node("/root/Config").call("set_last_file_open_path", path)
 	_zip_reader = ZIPReader.new()
 	_dir_access = null
@@ -54,11 +56,12 @@ func _on_first_dialog_file_selected(path):
 		get_tree().quit()
 	_files = _zip_reader.get_files()
 	_files.sort()
-	_current_page_index = 0
+	_current_page_index = get_node("/root/Config").get_read_position(_file_path)
 	if _files.size() > 0:
 		_display_page()
 
 func _on_dir_dialog_dir_selected(dir):
+	_file_path = dir
 	get_node("/root/Config").call("set_last_dir_open_path", dir)
 	_dir_access = DirAccess.open(dir)
 	if not _dir_access:
@@ -66,7 +69,7 @@ func _on_dir_dialog_dir_selected(dir):
 		get_tree().quit()
 	_zip_reader = null
 	_files = _build_files_from_directory(_dir_access)
-	_current_page_index = 0
+	_current_page_index = get_node("/root/Config").get_read_position(_file_path)
 	if _files.size() > 0:
 		_display_page()
 
@@ -107,6 +110,7 @@ func _display_page()->void:
 	var image_texture: ImageTexture = ImageTexture.create_from_image(image)
 	var size:Vector2 = image_texture.get_size()
 	_page_viewer.texture = image_texture
+	get_node("/root/Config").set_read_position(_file_path, _current_page_index)
 	
 func _delete_children(node: Node)->void:
 	for n in node.get_children():

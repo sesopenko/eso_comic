@@ -4,11 +4,14 @@ const CONFIG_FILEPATH = "user://config.json"
 const CONFIG_VERSION_KEY = "config_version"
 const LAST_FILE_KEY = "last_file"
 const LAST_DIR_KEY = "last_dir"
+const POSITION_KEY = "position_file"
+const CURRENT_VERSION = 2
 
 var config: Dictionary = {
-	CONFIG_VERSION_KEY: 1,
+	CONFIG_VERSION_KEY: 2,
 	LAST_FILE_KEY: "",
 	LAST_DIR_KEY: "",
+	POSITION_KEY: {},
 }
 
 func _ready():
@@ -22,6 +25,15 @@ func _initialize()->void:
 			var error = json.parse(contents)
 			if typeof(json.data) == TYPE_DICTIONARY:
 				config = json.data
+				_migrate()
+
+func _migrate()->void:
+	if config[CONFIG_VERSION_KEY] < CURRENT_VERSION:
+		while config[CONFIG_VERSION_KEY] < CURRENT_VERSION:
+			if config[CONFIG_VERSION_KEY] == 1:
+				config[POSITION_KEY] = {}
+			config[CONFIG_VERSION_KEY] += 1
+		_save()
 				
 func _save()->void:
 	var file: = FileAccess.open(CONFIG_FILEPATH, FileAccess.WRITE)
@@ -53,3 +65,14 @@ func get_last_dir_open_path()->String:
 	if not DirAccess.dir_exists_absolute(config[LAST_DIR_KEY]):
 		return ""
 	return config[LAST_DIR_KEY]
+	
+func set_read_position(path: String, position: int)->void:
+	if path != "":
+		config[POSITION_KEY][path] = position
+		_save()
+		
+func get_read_position(path)->int:
+	if not (config[POSITION_KEY] as Dictionary).has(path):
+		return 0
+	return int(config[POSITION_KEY][path])
+
