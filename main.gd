@@ -1,126 +1,44 @@
 extends VBoxContainer
 
-@onready var _first_dialog: FileDialog = $FirstDialog
-@onready var _dir_dialog: FileDialog = $DirDialog
-@onready var _page_viewer: TextureRect = $PageViewer
+var _viewer_packed: PackedScene = preload("res://scenes/comic_viewer.tscn")
+@onready var _viewer_holder: Node = $ViewerHolder
+@onready var _synchronize_setting: CheckBox = $MainControl/SynchronizeSetting
+@onready var _add_reader_button: Button = $MainControl/AddReaderButton
 
-var _zip_reader: ZIPReader
-var _files: PackedStringArray
-var _current_page_index: int = 0
-var _dir_access: DirAccess
+
+@onready var _primary_viewer: ComicViewer = $ViewerHolder/ComicViewer
+var _secondary_viewer: ComicViewer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	pass # Replace with function body.
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 
 
-func _on_open_dialog_button_pressed():
-	var path: String = get_node("/root/Config").call("get_folder_of_last_file_open")
-	if path != "":
-		_first_dialog.current_dir = path
-	_first_dialog.visible = true
-	
-	
-func _on_open_dir_button_pressed():
-	var path: String = get_node("/root/Config").call("get_last_dir_open_path")
-	if path != "":
-		_dir_dialog.current_dir = path
-	_dir_dialog.visible = true
+func _on_add_reader_button_pressed():
+	_secondary_viewer = _viewer_packed.instantiate()
+	_viewer_holder.add_child(_secondary_viewer)
+	_secondary_viewer.connect("page_next", _on_comic_viewer_page_next.bind(false))
+	_secondary_viewer.connect("page_prev", _on_comic_viewer_page_prev.bind(false))
+	_add_reader_button.disabled = true
+
+func _on_comic_viewer_page_next(is_primary: bool):
+	if _synchronize_setting.button_pressed:
+		if not is_primary:
+			_primary_viewer.change_next()
+		else:
+			if _secondary_viewer:
+				_secondary_viewer.change_next()
 
 
-func _on_first_dialog_file_selected(path):
-	get_node("/root/Config").call("set_last_file_open_path", path)
-	_zip_reader = ZIPReader.new()
-	_dir_access = null
-	var err := _zip_reader.open(path)
-	if err != OK:
-		push_error("Unable to read file", path, err)
-		get_tree().quit()
-	_files = _zip_reader.get_files()
-	_files.sort()
-	_current_page_index = 0
-	if _files.size() > 0:
-		_display_page()
-
-func _on_dir_dialog_dir_selected(dir):
-	get_node("/root/Config").call("set_last_dir_open_path", dir)
-	_dir_access = DirAccess.open(dir)
-	if not _dir_access:
-		push_error("Failed to open directory:", dir)
-		get_tree().quit()
-	_zip_reader = null
-	_files = _build_files_from_directory(_dir_access)
-	_current_page_index = 0
-	if _files.size() > 0:
-		_display_page()
-
-func _build_files_from_directory(dir_access: DirAccess)->PackedStringArray:
-	var files: PackedStringArray = PackedStringArray()
-	dir_access.list_dir_begin()
-	var file_name: String = dir_access.get_next()
-	while file_name != "":
-		if not dir_access.current_is_dir():
-			if file_name.ends_with(".jpg") or file_name.ends_with(".png") or file_name.ends_with(".jpeg"):
-				files.append(file_name)
-		file_name = dir_access.get_next()
-	files.sort()
-	return files
-	
-func _display_page()->void:
-	var file_name: String = _files[_current_page_index]
-	var res: PackedByteArray
-	if _zip_reader != null:
-		# we're reading a zip file
-		res = _zip_reader.read_file(file_name)
-	elif _dir_access != null:
-		# we're reading a raw file
-		var path: String = str(_dir_access.get_current_dir(), "/", file_name)
-		res = FileAccess.get_file_as_bytes(path)
-	# write to file so we can load it
-	# this step may be unecessary but haven't tried refactoring into loading
-	# image directly from bytes.
-	var image: Image = Image.new()
-	if file_name.ends_with(".jpg") or file_name.ends_with(".jpeg"):
-		image.load_jpg_from_buffer(res)
-	elif file_name.ends_with(".png"):
-		image.load_png_from_buffer(res)
-	else:
-		push_error("Unsupported file extension:", file_name)
-		get_tree().quit()
-		
-	var image_texture: ImageTexture = ImageTexture.create_from_image(image)
-	var size:Vector2 = image_texture.get_size()
-	_page_viewer.texture = image_texture
-	
-func _delete_children(node: Node)->void:
-	for n in node.get_children():
-		node.remove_child(n)
-		n.queue_free()
-
-
-func _on_prev_page_pressed():
-	if _zip_reader == null and _dir_access == null:
-		return
-	if _current_page_index == 0:
-		# can't go any further
-		return
-	_current_page_index -= 1
-	_display_page()
-
-
-func _on_next_page_pressed():
-	if _zip_reader == null and _dir_access == null:
-		return
-	if _files.size() == 0:
-		# can't go anywhere
-		return
-	if _current_page_index >= _files.size() - 1:
-		# can't go any further
-		return
-	_current_page_index += 1
-	_display_page()
-	
+func _on_comic_viewer_page_prev(is_primary: bool):
+	if _synchronize_setting.button_pressed:
+		if not is_primary:
+			_primary_viewer.change_prev()
+		else:
+			if _secondary_viewer:
+				_secondary_viewer.change_prev()

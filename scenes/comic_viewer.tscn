@@ -1,0 +1,69 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnsh5lw5nsxov"]
+
+[ext_resource type="Script" path="res://scenes/comic_viewer.gd" id="1_r0uc1"]
+[ext_resource type="Texture2D" uid="uid://ckb4fy7psfm51" path="res://assets/figure_in_manga_style_cc.png" id="2_q5fpe"]
+
+[node name="ComicViewer" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_r0uc1")
+
+[node name="Controls" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="OpenFileButton" type="Button" parent="Controls"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Open CBZ/ZIP File
+"
+
+[node name="OpenDirButton" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Open Folder"
+
+[node name="PrevPage" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Previous Page"
+
+[node name="NextPage" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Next Page"
+
+[node name="PageViewer" type="TextureRect" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_q5fpe")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 2
+size = Vector2i(900, 400)
+min_size = Vector2i(600, 400)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.cbz", "*.zip")
+
+[node name="DirDialog" type="FileDialog" parent="."]
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(900, 400)
+ok_button_text = "Select Current Folder"
+dialog_hide_on_ok = true
+file_mode = 2
+access = 2
+
+[connection signal="pressed" from="Controls/OpenFileButton" to="." method="_on_open_dialog_button_pressed"]
+[connection signal="pressed" from="Controls/OpenDirButton" to="." method="_on_open_dir_button_pressed"]
+[connection signal="pressed" from="Controls/PrevPage" to="." method="_on_prev_page_pressed"]
+[connection signal="pressed" from="Controls/NextPage" to="." method="_on_next_page_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_first_dialog_file_selected"]
+[connection signal="dir_selected" from="DirDialog" to="." method="_on_dir_dialog_dir_selected"]
