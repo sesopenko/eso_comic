@@ -5,6 +5,7 @@ class_name ComicViewer
 @onready var _dir_dialog: FileDialog = $DirDialog
 @onready var _page_viewer: TextureRect = $PageViewer
 @onready var _read_position_label: Label = $Controls/ReadPosLabel
+@onready var _next_comic_timer: Timer = $NextComicTimer
 
 signal page_next()
 signal page_prev()
@@ -19,6 +20,7 @@ var _file_path: String = ""
 var _mouse_active: bool = false
 
 var _opening_next: bool = false
+var _opening_prev: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -65,6 +67,9 @@ func open_zip_file_path(path):
 	if _opening_next:
 		_current_page_index = 0
 		_opening_next = false
+	elif _opening_prev:
+		_current_page_index = _files.size() - 1
+		_opening_prev = false
 	else:
 		_current_page_index = get_node("/root/Config").get_read_position(_file_path)
 	if _files.size() > 0:
@@ -86,6 +91,9 @@ func open_dir_path(dir):
 	if _opening_next:
 		_current_page_index = 0
 		_opening_next = false
+	elif _opening_prev:
+		_current_page_index = _files.size() - 1
+		_opening_prev = false
 	else:
 		_current_page_index = get_node("/root/Config").get_read_position(_file_path)
 	if _files.size() > 0:
@@ -144,6 +152,10 @@ func change_next()->void:
 		return
 	if _current_page_index >= _files.size() - 1:
 		# can't go any further
+		if _next_comic_timer.is_stopped():
+			_next_comic_timer.start()
+		else:
+			_on_next_comic_button_pressed()
 		return
 	_current_page_index += 1
 	_display_page()
@@ -153,6 +165,10 @@ func change_prev()->void:
 		return
 	if _current_page_index == 0:
 		# can't go any further
+		if _next_comic_timer.is_stopped():
+			_next_comic_timer.start()
+		else:
+			_on_prev_comic_button_pressed()
 		return
 	_current_page_index -= 1
 	_display_page()
@@ -181,11 +197,21 @@ func _on_mouse_exited():
 
 
 func _on_file_dialog_file_selected(path):
+	_opening_next = false
+	_opening_prev = false
+	_open_file_selected(path)
+	
+func _open_file_selected(path):
 	open_zip_file_path(path)
 	emit_signal("opened", true, path)
 
 
 func _on_dir_dialog_dir_selected(dir):
+	_opening_next = false
+	_opening_prev = false
+	_open_dir_location(dir)
+
+func _open_dir_location(dir):
 	open_dir_path(dir)
 	emit_signal("opened", false, dir)
 
@@ -223,8 +249,11 @@ func _move_zip_file(steps: int)->void:
 	if files.size() > next_file_index and next_file_index >= 0:
 		var next_file: String = files[next_file_index]
 		var next_path = str(dir, "/", next_file)
-		_opening_next = true
-		_on_file_dialog_file_selected(next_path)
+		if (steps > 0):
+			_opening_next = true
+		elif (steps < 0):
+			_opening_prev = true
+		_open_file_selected(next_path)
 
 func _move_dir(steps: int)->void:
 	var regex = RegEx.new()
@@ -250,8 +279,11 @@ func _move_dir(steps: int)->void:
 	if dirs.size() > next_dir_index and next_dir_index >= 0:
 		var next_dir: String = dirs[next_dir_index]
 		var next_path = str(parent_path, "/", next_dir)
-		_opening_next = true
-		_on_dir_dialog_dir_selected(next_path)
+		if steps > 0:
+			_opening_next = true
+		elif steps < 0:
+			_opening_prev = true
+		_open_dir_location(next_path)
 		
 
 
