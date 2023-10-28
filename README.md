@@ -4,27 +4,18 @@ An open-source comic book reader powered by [Godot](https://godotengine.org/), d
 
 ![Screenshot](docs/images/screenshot_2.jpg)
 
+## Download
+
+Download the latest version of the app from the [Releases Page](https://github.com/sesopenko/eso_comic/releases).
+
 ## System Requirements
 
 * Tested on Windows 11 but should work on Windows 7 & 10 as well
-* Requires about 100MB of free ram.
-
-## How to build the project
-
-You may be prompted to download export profiles by Godot.  Just let it do this automatically (takes 1-10 minutes, depending on your internet speed).
-
-1. [Download Godot](https://godotengine.org/download/windows/)
-2. Download this project (and extract zip file if you downloaded a zip)
-3. Import the project with Godot
-4. Menu: Project->Export
-5. Add->Windows Desktop (or linux if you're on linux, mac and mobile are out of scope)
-6. Export Path: Click folder icon and choose where to save the file
-7. Binary Format: Embed PCK: On (so that it's a single file exe)
-8. Export All
-
-## Motivation
-
-While learning a second language, I've desired to capture some of the nuances lost in translation when reading comics. Opening two reader applications works, but paging them independently was a pain. I wanted something that lets me page through them simultaneously.
+* Approx 100MB free RAM
+* OpenGL ES 3.0 compatible GPU:
+  * Nvidia Maxwell or newer (2014 or later)
+  * AMD GCN or newer (2011 or later)
+  * Intel Haswel or newer (2013 or later)
 
 ## Supported Files
 
@@ -32,10 +23,10 @@ While learning a second language, I've desired to capture some of the nuances lo
 * ZIP files containing jpg/png files
 * Directories containing jpg/png files (nested directories unsupported)
 
-## License
+## Licensed GNU GPLv3
 
-This application code is free and open source, licenced with the GNU GPL V3 license.  It may be read in [LICENSE.txt](LICENCE.txt).
+*GNU GENERAL PUBLIC LICENSE version 3* by [Free Software Foundation, Inc.](http://fsf.org/) converted to Markdown. License included in [LICENSE.txt](LICENSE.txt). Read the [original GPL v3](http://www.gnu.org/licenses/).
 
 ## Copyright
 
-This software is Copyright (c) Sean Esopenko 2023.
+This software is Copyright (c) Sean Esopenko 2023. All rights reserved.
