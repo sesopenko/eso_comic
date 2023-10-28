@@ -43,9 +43,15 @@ jobs:
     - name: list export
       id: list_export
       run: ls -lha ${{ steps.export.outputs.build_directory }}
-    - name: upload windows artifact
-      id: upload_win_artifact
-      uses: actions/upload-artifact@v3
+    # - name: upload windows artifact
+    #   id: upload_win_artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: eso_comic-Windows-${{ steps.tag_version.outputs.TAG_VERSION }}
+    #     path: ${{ steps.export.outputs.build_directory }}/Windows
+    - name: Release
+      uses: softprops/action-gh-release@v1
       with:
-        name: eso_comic-Windows-${{ steps.tag_version.outputs.TAG_VERSION }}
-        path: ${{ steps.export.outputs.build_directory }}/Windows
+        files: |
+          ${{ steps.export.outputs.build_directory }}/Windows
+          LICENSE.txt
