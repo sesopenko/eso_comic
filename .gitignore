@@ -17,3 +17,7 @@ mono_crash.*.json
 
 # garbage sometimes created
 *.tmp
+
+# draw.io junk
+*.bkp
+*.dtmp
