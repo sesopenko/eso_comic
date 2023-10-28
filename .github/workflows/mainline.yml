@@ -42,7 +42,7 @@ jobs:
 
     - name: list export
       id: list_export
-      run: ls -lha ${{ steps.export.outputs.build_directory }}
+      run: ls -lha ${{ steps.export.outputs.build_directory }}/Windows
     # - name: upload windows artifact
     #   id: upload_win_artifact
     #   uses: actions/upload-artifact@v3
@@ -53,5 +53,5 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ${{ steps.export.outputs.build_directory }}/Windows
+          ${{ steps.export.outputs.build_directory }}/Windows/eso_comic.exe
           LICENSE.txt
