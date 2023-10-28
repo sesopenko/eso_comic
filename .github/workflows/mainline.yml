@@ -42,7 +42,7 @@ jobs:
 
     - name: list export
       id: list_export
-      run: ls -lha ${{ steps.export.outputs.archive_directory }}
+      run: ls -lha ${{ steps.export.outputs.build_directory }}
     - name: upload windows artifact
       id: upload_win_artifact
       uses: actions/upload-artifact@v3
