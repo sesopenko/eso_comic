@@ -47,5 +47,5 @@ jobs:
       id: upload_win_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ steps.tag_version.outputs.TAG_VERSION }}-Windows
-        path: ${{ steps.export.outputs.archive_directory }}/Windows.zip
+        name: eso_comic-Windows-${{ steps.tag_version.outputs.TAG_VERSION }}
+        path: ${{ steps.export.outputs.build_directory }}/Windows
