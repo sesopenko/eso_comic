@@ -17,6 +17,10 @@ Download the latest version of the app from the [Releases Page](https://github.c
   * AMD GCN or newer (2011 or later)
   * Intel Haswel or newer (2013 or later)
 
+## Reporting Issues
+
+If you are experiencing bugs when using the software please submit an issue using the [Project Issue Tracker](https://github.com/sesopenko/eso_comic/issues). If you don't already have a github user, you will have to [join Github](https://github.com/join).
+
 ## Supported Files
 
 * [CBZ](https://en.wikipedia.org/wiki/Comic_book_archive) files containing jpg/png files
